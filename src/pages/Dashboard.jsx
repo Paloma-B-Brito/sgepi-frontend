@@ -1,10 +1,18 @@
-import Card from "../components/Card";
+import { useState } from "react";
+import ModalEntrada from "../components/modals/ModalEntrada";
+import ModalEntrega from "../components/modals/ModalEntrega";
+import ModalBusca from "../components/modals/ModalBusca";
+
 
 function Dashboard() {
+    const [modalEntrada, setModalEntrada] = useState(false);
+    const [modalEntrega, setModalEntrega] = useState(false);
+    const [modalBusca, setModalBusca] = useState(false);
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            {/* TABELA */}
+            {/* TABELA DE ESTOQUE */}
             <div className="bg-white rounded-xl shadow p-6 lg:col-span-2">
                 <h2 className="text-xl font-bold text-gray-700 mb-4">
                     Estoque Atual de EPIs
@@ -37,7 +45,7 @@ function Dashboard() {
 
                 {/* ALERTAS */}
                 <div className="bg-white rounded-xl shadow p-6">
-                    <h2 className="font-bold text-gray-800 mb-4 text-lg flex items-center gap-2">
+                    <h2 className="font-bold text-gray-800 mb-4 text-lg">
                         ⚠️ ALERTAS IMPORTANTES
                     </h2>
 
@@ -64,20 +72,46 @@ function Dashboard() {
                     </h2>
 
                     <div className="space-y-3">
-                        <button className="w-full bg-green-600 text-white p-3 rounded-lg font-bold hover:bg-green-700 transition">
+                        <button
+                            onClick={() => setModalEntrada(true)}
+                            className="w-full bg-green-600 text-white p-3 rounded-lg font-bold hover:bg-green-700 transition"
+                        >
                             ➕ Registrar Nova Entrada
                         </button>
 
-                        <button className="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition">
+                        <button
+                            onClick={() => setModalEntrega(true)}
+                            className="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition"
+                        >
                             ✋ Realizar Entrega / Baixa
                         </button>
 
-                        <button className="w-full bg-yellow-500 text-white p-3 rounded-lg font-bold hover:bg-yellow-600 transition">
+                        <button
+                            onClick={() => setModalBusca(true)}
+                            className="w-full bg-yellow-500 text-white p-3 rounded-lg font-bold hover:bg-yellow-600 transition"
+                        >
                             🔍 Buscar CA / EPI
                         </button>
                     </div>
                 </div>
+
             </div>
+
+            {/* MODAL ENTRADA */}
+            {modalEntrada && (
+                <ModalEntrada onClose={() => setModalEntrada(false)} />
+            )}
+
+            {modalEntrega && (
+                <ModalEntrega onClose={() => setModalEntrega(false)} />
+            )}
+
+
+            {modalBusca && (
+                <ModalBusca onClose={() => setModalBusca(false)} />
+            )}
+
+
         </div>
     );
 }
