@@ -3,9 +3,10 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header"
 import Estoque from "./pages/Estoque";
-import Funcionarios from "./pages/Funcionarios";
+import Funcionários from "./pages/Funcionários";
 import Entradas from "./pages/Entradas";
 import Entregas from "./pages/Entregas";
+import Devoluções from "./pages/Devoluções";
 
 function App() {
   const [logado, setLogado] = useState(false);
@@ -21,12 +22,14 @@ function App() {
         return <Dashboard />;
       case "Estoque":
         return <Estoque />;
-      case "Funcionarios":
-        return <Funcionarios/>;
+      case "Funcionários":
+        return <Funcionários/>;
       case "Entradas":
         return <Entradas />;
       case "Entregas":
         return <Entregas />;
+        case "Devoluções":
+        return <Devoluções />;
       default:
         return <Dashboard />;
     }

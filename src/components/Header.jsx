@@ -18,9 +18,10 @@ function Header ({paginaAtual, setPagina, onLogout}){
             <div className="flex gap-2">
                 <Botao label="Dashboard"/>
                 <Botao label="Estoque"/>
-                <Botao label="Funcionarios"/>
+                <Botao label="Funcionários"/>
                 <Botao label="Entradas"/>
                 <Botao label="Entregas"/>
+                <Botao label="Devoluções"/>
             </div>
 
             <button onClick={onLogout} className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-medium">

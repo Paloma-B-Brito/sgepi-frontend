@@ -2,202 +2,220 @@ import { useState } from "react";
 
 function Entradas() {
   const [modalAberto, setModalAberto] = useState(false);
-  const [filtro, setFiltro] = useState("");
 
-  const [entradas, setEntradas] = useState([
-    {
-      data: "12/06/2025",
-      hora: "09:30",
-      responsavel: "Maria Santos",
-      itens: "Capacete (20), Luvas (50)"
-    }
-  ]);
+  // SIMULAÇÃO (depois vem da API)
+  const usuarios = [
+    { id: 1, nome: "Maria Santos" },
+    { id: 2, nome: "João Silva" },
+  ];
 
-  const [historico, setHistorico] = useState([
-    {
-      responsavel: "Maria Santos",
-      item: "Capacete",
-      quantidade: 20,
-      data: "12/06/2025",
-      hora: "09:30"
-    }
-  ]);
+  const epis = [
+    { id: 1, nome: "Capacete de Segurança", tamanhos: ["P", "M", "G"] },
+    { id: 2, nome: "Luva de Proteção", tamanhos: ["P", "M", "G"] },
+    { id: 3, nome: "Sapato de Segurança", tamanhos: ["40", "42", "44"] },
+  ];
 
-  // FORMULÁRIO
-  const [formResponsavel, setFormResponsavel] = useState("");
-  const [formItens, setFormItens] = useState("");
-  const [formData, setFormData] = useState("");
-  const [formHora, setFormHora] = useState("");
+  const [entradas, setEntradas] = useState([]);
 
-  const historicoFiltrado = historico.filter((h) =>
-    h.responsavel.toLowerCase().includes(filtro.toLowerCase())
-  );
+  // FORM
+  const [responsavel, setResponsavel] = useState("");
+  const [epi, setEpi] = useState("");
+  const [tamanho, setTamanho] = useState("");
+  const [quantidade, setQuantidade] = useState(1);
+  const [dataEntrada, setDataEntrada] = useState("");
+  const [lote, setLote] = useState("");
+  const [fornecedor, setFornecedor] = useState("");
+  const [valorUnitario, setValorUnitario] = useState("");
 
   function abrirModal() {
-    setFormResponsavel("");
-    setFormItens("");
-    setFormData("");
-    setFormHora("");
+    setResponsavel("");
+    setEpi("");
+    setTamanho("");
+    setQuantidade(1);
+    setDataEntrada("");
+    setLote("");
+    setFornecedor("");
+    setValorUnitario("");
     setModalAberto(true);
   }
 
   function salvarEntrada() {
     const novaEntrada = {
-      data: formData,
-      hora: formHora,
-      responsavel: formResponsavel,
-      itens: formItens
+      id: crypto.randomUUID(),
+      responsavel,
+      epi,
+      tamanho,
+      quantidade,
+      dataEntrada,
+      fornecedor,
+      lote,
+      valorUnitario,
     };
 
     setEntradas((prev) => [...prev, novaEntrada]);
-
-    const novoHistorico = {
-      responsavel: formResponsavel,
-      item: formItens,
-      quantidade: 1,
-      data: formData,
-      hora: formHora
-    };
-
-    setHistorico((prev) => [...prev, novoHistorico]);
-
     setModalAberto(false);
   }
 
+  const epiSelecionado = epis.find(
+    (e) => e.id === Number(epi)
+  );
+
   return (
     <div className="bg-white p-6 rounded-xl shadow">
-
-      {/* TÍTULO */}
-      <div className="flex justify-between items-center mb-1">
+      <div className="flex justify-between items-center mb-2">
         <h2 className="text-2xl font-bold text-gray-700">
           Entradas de EPIs
         </h2>
 
         <button
           onClick={abrirModal}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg font-bold"
         >
           ➕ Nova Entrada
         </button>
       </div>
 
       <p className="text-sm text-gray-500 mb-4">
-        Registro e histórico de entradas de EPIs
+        Registro de entradas no estoque
       </p>
 
-      {/* TABELA */}
-      <table className="w-full text-left border border-gray-200 rounded-lg overflow-hidden mb-8">
-        <thead className="bg-gray-100 text-sm text-gray-600">
+      <table className="w-full border rounded-lg">
+        <thead className="bg-gray-100 text-sm">
           <tr>
-            <th className="p-3">Data</th>
-            <th className="p-3">Hora</th>
-            <th className="p-3">Responsável</th>
-            <th className="p-3">Itens</th>
+            <th className="p-2">Data</th>
+            <th className="p-2">Responsável</th>
+            <th className="p-2">EPI</th>
+            <th className="p-2">Tam.</th>
+            <th className="p-2">Qtd</th>
+            <th className="p-2">Fornecedor</th>
           </tr>
         </thead>
+
         <tbody>
-          {entradas.map((entrada, index) => (
-            <tr key={index} className="border-t">
-              <td className="p-3">{entrada.data}</td>
-              <td className="p-3">{entrada.hora}</td>
-              <td className="p-3">{entrada.responsavel}</td>
-              <td className="p-3">{entrada.itens}</td>
+          {entradas.length === 0 && (
+            <tr>
+              <td colSpan="6" className="p-6 text-center text-gray-400">
+                Nenhuma entrada registrada
+              </td>
+            </tr>
+          )}
+
+          {entradas.map((e) => (
+            <tr key={e.id} className="border-t">
+              <td className="p-2">{e.dataEntrada}</td>
+              <td className="p-2">
+                {usuarios.find(
+                  (u) => u.id === Number(e.responsavel)
+                )?.nome}
+              </td>
+              <td className="p-2">
+                {epis.find(
+                  (ep) => ep.id === Number(e.epi)
+                )?.nome}
+              </td>
+              <td className="p-2 text-center">{e.tamanho}</td>
+              <td className="p-2 text-center">{e.quantidade}</td>
+              <td className="p-2">{e.fornecedor}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* HISTÓRICO */}
-      <div className="bg-gray-50 p-5 rounded-xl border">
-        <h3 className="text-lg font-bold text-gray-700 mb-4">
-          📜 Histórico de Entradas
-        </h3>
-
-        <input
-          type="text"
-          placeholder="Filtrar por responsável..."
-          value={filtro}
-          onChange={(e) => setFiltro(e.target.value)}
-          className="w-full p-3 border rounded-lg mb-4"
-        />
-
-        <div className="space-y-3 text-sm">
-          {historicoFiltrado.map((h, index) => (
-            <div
-              key={index}
-              className="border-l-4 border-green-600 pl-4 py-2 bg-white rounded"
-            >
-              <p className="text-gray-800 font-medium">
-                {h.responsavel} registrou entrada de {h.item}
-              </p>
-              <p className="text-gray-500">
-                {h.data} às {h.hora}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* MODAL */}
       {modalAberto && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-xl w-[450px]">
-
+          <div className="bg-white p-6 rounded-xl w-[500px]">
             <h2 className="text-xl font-bold mb-4">
-              Nova Entrada
+              Nova Entrada de EPI
             </h2>
 
+            <select
+              className="w-full p-3 border mb-2"
+              onChange={(e) => setResponsavel(e.target.value)}
+            >
+              <option value="">Responsável</option>
+              {usuarios.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.nome}
+                </option>
+              ))}
+            </select>
+
+            <select
+              className="w-full p-3 border mb-2"
+              onChange={(e) => setEpi(e.target.value)}
+            >
+              <option value="">EPI</option>
+              {epis.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.nome}
+                </option>
+              ))}
+            </select>
+
+            {epiSelecionado && (
+              <select
+                className="w-full p-3 border mb-2"
+                onChange={(e) => setTamanho(e.target.value)}
+              >
+                <option value="">Tamanho</option>
+                {epiSelecionado.tamanhos.map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
+              </select>
+            )}
+
             <input
-              type="text"
-              placeholder="Responsável"
-              value={formResponsavel}
-              onChange={(e) => setFormResponsavel(e.target.value)}
-              className="w-full p-3 border rounded-lg mb-3"
+              type="number"
+              className="w-full p-3 border mb-2"
+              placeholder="Quantidade"
+              onChange={(e) => setQuantidade(Number(e.target.value))}
             />
 
             <input
-              type="text"
-              placeholder="Itens (ex: Capacete 10, Luva 20)"
-              value={formItens}
-              onChange={(e) => setFormItens(e.target.value)}
-              className="w-full p-3 border rounded-lg mb-3"
+              type="date"
+              className="w-full p-3 border mb-2"
+              onChange={(e) => setDataEntrada(e.target.value)}
             />
 
-            <div className="flex gap-2 mb-4">
-              <input
-                type="date"
-                value={formData}
-                onChange={(e) => setFormData(e.target.value)}
-                className="flex-1 p-2 border rounded-lg"
-              />
-              <input
-                type="time"
-                value={formHora}
-                onChange={(e) => setFormHora(e.target.value)}
-                className="flex-1 p-2 border rounded-lg"
-              />
-            </div>
+            <input
+              className="w-full p-3 border mb-2"
+              placeholder="Fornecedor"
+              onChange={(e) => setFornecedor(e.target.value)}
+            />
+
+            <input
+              className="w-full p-3 border mb-2"
+              placeholder="Lote"
+              onChange={(e) => setLote(e.target.value)}
+            />
+
+            <input
+              type="number"
+              step="0.01"
+              className="w-full p-3 border mb-4"
+              placeholder="Valor unitário"
+              onChange={(e) => setValorUnitario(e.target.value)}
+            />
 
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setModalAberto(false)}
-                className="px-4 py-2 bg-gray-300 rounded-lg"
+                className="bg-gray-300 px-4 py-2 rounded"
               >
                 Cancelar
               </button>
 
               <button
                 onClick={salvarEntrada}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg"
+                className="bg-green-600 text-white px-4 py-2 rounded"
               >
                 Salvar
               </button>
             </div>
-
           </div>
         </div>
       )}
-
     </div>
   );
 }

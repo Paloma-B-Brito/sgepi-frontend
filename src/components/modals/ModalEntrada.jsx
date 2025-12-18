@@ -74,7 +74,7 @@ function ModalEntrada({ onClose }) {
             Assinatura digital:
           </p>
           <div className="border h-32 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400">
-            Área de assinatura (futuramente com canvas)
+            Área de assinatura
           </div>
         </div>
 
